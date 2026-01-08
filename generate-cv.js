@@ -14,7 +14,7 @@ const {
   ShadingType,
 } = require("docx");
 const fs = require("fs");
-require('dotenv').config();
+require("dotenv").config();
 
 const PRIMARY = "2563EB";
 const DARK = "1E293B";
@@ -129,73 +129,49 @@ function jobEntry(title, company, dates, location, bullets, tag = null) {
   return children;
 }
 
-function projectEntry(name, role, description, stack, link = null) {
-  const stackLine = [
-    new TextRun({
-      text: stack,
-      size: 18,
-      color: LIGHT_TEXT,
-      font: "Calibri",
-      italics: true,
-    }),
-  ];
-  if (link) {
-    stackLine.push(
-      new TextRun({
-        text: "  •  ",
-        size: 18,
-        color: LIGHT_TEXT,
-        font: "Calibri",
-      })
-    );
-    stackLine.push(
-      new ExternalHyperlink({
-        children: [
-          new TextRun({
-            text: link.text,
-            color: PRIMARY,
-            size: 18,
-            font: "Calibri",
-          }),
-        ],
-        link: link.url,
-      })
-    );
-  }
-
+// New function for Education in the main column
+function eduEntryLeft(school, degree, dates, details) {
   return [
     new Paragraph({
       spacing: { before: 100, after: 20 },
       children: [
         new TextRun({
-          text: name,
+          text: school,
           bold: true,
           size: 21,
           color: DARK,
           font: "Calibri",
         }),
         new TextRun({
-          text: `  —  ${role}`,
+          text: `  —  ${dates}`,
           size: 19,
-          color: TEXT,
+          color: LIGHT_TEXT,
           font: "Calibri",
         }),
       ],
     }),
     new Paragraph({
-      spacing: { after: 30 },
+      spacing: { after: 20 },
       children: [
         new TextRun({
-          text: description,
-          size: 19,
+          text: degree,
+          size: 20,
           color: TEXT,
           font: "Calibri",
+          italics: true,
         }),
       ],
     }),
     new Paragraph({
-      spacing: { after: 60 },
-      children: stackLine,
+      spacing: { after: 40 },
+      children: [
+        new TextRun({
+          text: details,
+          size: 18,
+          color: LIGHT_TEXT,
+          font: "Calibri",
+        }),
+      ],
     }),
   ];
 }
@@ -234,6 +210,48 @@ function sidebarItem(label, value, isLink = false, url = null) {
   });
 }
 
+// New function for Sidebar Projects
+function sidebarProject(name, role, url = null) {
+  const children = [
+    new TextRun({
+      text: name,
+      bold: true,
+      size: 19,
+      color: DARK,
+      font: "Calibri",
+    }),
+    new TextRun({
+      text: `\n${role}`,
+      size: 17,
+      color: TEXT,
+      font: "Calibri",
+      italics: true,
+    }),
+  ];
+
+  if (url) {
+    children.push(
+      new TextRun({ text: "  ", size: 10 }), // spacer
+      new ExternalHyperlink({
+        children: [
+          new TextRun({
+            text: "(Link)",
+            size: 16,
+            color: PRIMARY,
+            font: "Calibri",
+          }),
+        ],
+        link: url,
+      })
+    );
+  }
+
+  return new Paragraph({
+    spacing: { after: 70 },
+    children: children,
+  });
+}
+
 function skillItem(category, skills) {
   return new Paragraph({
     spacing: { after: 70 },
@@ -251,60 +269,32 @@ function skillItem(category, skills) {
   });
 }
 
-function eduItem(title, school, year, details) {
-  return [
-    new Paragraph({
-      spacing: { before: 70, after: 15 },
-      children: [
-        new TextRun({
-          text: title,
-          bold: true,
-          size: 19,
-          color: DARK,
-          font: "Calibri",
-        }),
-      ],
-    }),
-    new Paragraph({
-      spacing: { after: 15 },
-      children: [
-        new TextRun({ text: school, size: 17, color: TEXT, font: "Calibri" }),
-        new TextRun({
-          text: `  •  ${year}`,
-          size: 17,
-          color: LIGHT_TEXT,
-          font: "Calibri",
-        }),
-      ],
-    }),
-    new Paragraph({
-      spacing: { after: 50 },
-      children: [
-        new TextRun({
-          text: details,
-          size: 16,
-          color: LIGHT_TEXT,
-          font: "Calibri",
-          italics: true,
-        }),
-      ],
-    }),
-  ];
-}
-
 const leftContent = [
   sectionLeft("Profile"),
   new Paragraph({
     spacing: { after: 120 },
     children: [
       new TextRun({
-        text: "After 10 years solving real-world problems—from managing restaurant P&L to installing critical infrastructure—I pivoted to software engineering to ",
+        text: "Software Engineer leveraging over 10 years of operational leadership to build robust systems. Former Operations Manager proficient in ",
         size: 21,
         color: TEXT,
         font: "Calibri",
       }),
       new TextRun({
-        text: "build systems, not just operate them",
+        text: "crisis management",
+        bold: true,
+        size: 21,
+        color: DARK,
+        font: "Calibri",
+      }),
+      new TextRun({
+        text: " and ",
+        size: 21,
+        color: TEXT,
+        font: "Calibri",
+      }),
+      new TextRun({
+        text: "zero-error discipline",
         bold: true,
         size: 21,
         color: DARK,
@@ -324,36 +314,20 @@ const leftContent = [
         font: "Calibri",
       }),
       new TextRun({
-        text: ", I combine ",
+        text: ", I combine technical expertise in ",
         size: 21,
         color: TEXT,
         font: "Calibri",
       }),
       new TextRun({
-        text: "operational leadership",
-        bold: true,
-        size: 21,
-        color: DARK,
-        font: "Calibri",
-      }),
-      new TextRun({ text: ", ", size: 21, color: TEXT, font: "Calibri" }),
-      new TextRun({
-        text: "zero-error discipline",
-        bold: true,
-        size: 21,
-        color: DARK,
-        font: "Calibri",
-      }),
-      new TextRun({ text: ", and ", size: 21, color: TEXT, font: "Calibri" }),
-      new TextRun({
-        text: "crisis management",
+        text: "Ruby on Rails and React",
         bold: true,
         size: 21,
         color: DARK,
         font: "Calibri",
       }),
       new TextRun({
-        text: " with Ruby on Rails. ",
+        text: " with a proven track record of solving complex, real-world problems. ",
         size: 21,
         color: TEXT,
         font: "Calibri",
@@ -391,23 +365,8 @@ const leftContent = [
           font: "Calibri",
         }),
         new TextRun({
-          text: "Rails, PostgreSQL, AI integration",
+          text: "Rails, JavaScript, React, PostgreSQL, AI integration",
           bold: true,
-          size: 19,
-          color: TEXT,
-          font: "Calibri",
-        }),
-      ],
-      [
-        new TextRun({
-          text: "Projects: ",
-          bold: true,
-          size: 19,
-          color: DARK,
-          font: "Calibri",
-        }),
-        new TextRun({
-          text: "Language learning platform, AI UI generator—deployed",
           size: 19,
           color: TEXT,
           font: "Calibri",
@@ -566,23 +525,24 @@ const leftContent = [
     ]
   ),
 
-  sectionLeft("Projects"),
-  ...projectEntry(
-    "Kizuna Lingua",
-    "Full-Stack Developer",
-    "Language learning for couples/friends. AI topics, bilingual conversation analysis.",
-    "Rails • PostgreSQL • JavaScript • Heroku",
-    { text: "kizunalingua.com", url: "https://www.kizunalingua.com/" }
+  sectionLeft("Education"),
+  ...eduEntryLeft(
+    "Le Wagon Tokyo",
+    "Full-Stack Web Development Bootcamp",
+    "2025",
+    "Intensive 9-week curriculum covering MVC architecture, database design, API integration, and product development."
   ),
-  ...projectEntry(
-    "UI Forge",
-    "Full-Stack Developer",
-    "AI-powered UI components creator for developers and designers.",
-    "Rails • PostgreSQL • RubyLLM (OpenAI, Gemini, Groq) • Heroku",
-    {
-      text: "Live Demo",
-      url: "https://ai-assistant-matiifernandez-132f8eab454e.herokuapp.com/",
-    }
+  ...eduEntryLeft(
+    "UTN Virtual",
+    "Argentina Programa - Full Stack Foundation",
+    "2022",
+    "Introduction to programming logic, JavaScript, and web standards."
+  ),
+  ...eduEntryLeft(
+    "UTN Argentina",
+    "Mechatronics Technician",
+    "2013",
+    "Industrial systems, PLCs, and engineering fundamentals."
   ),
 ];
 
@@ -612,16 +572,37 @@ const rightContent = [
   sidebarItem("", "Tokyo, Japan"),
   sidebarItem(
     "",
+    "www.matiasfernandez.me",
+    true,
+    "https://www.matiasfernandez.me"
+  ),
+  sidebarItem(
+    "",
     "LinkedIn",
     true,
     "https://linkedin.com/in/matias-fernandez-jp"
   ),
   sidebarItem("", "GitHub", true, "https://github.com/matiifernandez"),
 
+  sectionRight("Projects"),
+  sidebarProject(
+    "Kizuna Lingua",
+    "Full Stack Developer",
+    "https://www.kizunalingua.com/"
+  ),
+  sidebarProject(
+    "UI Forge",
+    "Full Stack Developer",
+    "https://ai-assistant-matiifernandez-132f8eab454e.herokuapp.com/"
+  ),
+  sidebarProject("MindMush", "Full Stack Developer"),
+  sidebarProject("Chemarket", "Full Stack Developer"),
+  sidebarProject("Jidou-Navi", "Backend Developer"),
+
   sectionRight("Tech Stack"),
   skillItem(
     "Core",
-    "Ruby on Rails, PostgreSQL, JavaScript (Stimulus), Tailwind/Bootstrap, HTML/CSS"
+    "Ruby on Rails, React, PostgreSQL, JavaScript, Tailwind, Bootstrap, HTML/CSS"
   ),
   skillItem(
     "AI & Tools",
@@ -730,16 +711,6 @@ const rightContent = [
       }),
     ],
   }),
-
-  sectionRight("Education"),
-  ...eduItem(
-    "Full-Stack Web Dev",
-    "Le Wagon Tokyo",
-    "2025",
-    "MVC, APIs, AI/LLM, Deployment"
-  ),
-  ...eduItem("Argentina Programa", "UTN Virtual", "2022", "Logic, JavaScript"),
-  ...eduItem("Mechatronics", "UTN Argentina", "2013", "Systems, PLCs"),
 ];
 
 const doc = new Document({
@@ -836,5 +807,5 @@ const doc = new Document({
 
 Packer.toBuffer(doc).then((buffer) => {
   fs.writeFileSync("MATIAS-FERNANDEZ-CV-modern.docx", buffer);
-  console.log("CV with Freelance experience created!");
+  console.log("CV updated successfully!");
 });
