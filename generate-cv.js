@@ -737,7 +737,7 @@ const doc = new Document({
   sections: [
     {
       properties: {
-        page: { margin: { top: 450, right: 0, bottom: 350, left: 600 } },
+        page: { margin: { top: 250, right: 0, bottom: 350, left: 600 } },
       },
       children: [
         new Table({
@@ -750,7 +750,7 @@ const doc = new Document({
                   width: { size: 10000, type: WidthType.DXA },
                   children: [
                     new Paragraph({
-                      spacing: { after: 30 },
+                      spacing: { after: 10 },
                       children: [
                         new TextRun({
                           text: "MATIAS FERNANDEZ",
@@ -762,7 +762,7 @@ const doc = new Document({
                       ],
                     }),
                     new Paragraph({
-                      spacing: { after: 50 },
+                      spacing: { after: 30 },
                       children: [
                         new TextRun({
                           text: "Full-Stack Developer",
