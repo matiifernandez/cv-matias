@@ -737,44 +737,29 @@ const doc = new Document({
   sections: [
     {
       properties: {
-        page: { margin: { top: 250, right: 0, bottom: 350, left: 600 } },
+        page: { margin: { top: 200, right: 0, bottom: 350, left: 600 } },
       },
       children: [
-        new Table({
-          columnWidths: [10000],
-          rows: [
-            new TableRow({
-              children: [
-                new TableCell({
-                  borders: noBorders,
-                  width: { size: 10000, type: WidthType.DXA },
-                  children: [
-                    new Paragraph({
-                      spacing: { after: 10 },
-                      children: [
-                        new TextRun({
-                          text: "MATIAS FERNANDEZ",
-                          bold: true,
-                          size: 50,
-                          color: DARK,
-                          font: "Calibri",
-                        }),
-                      ],
-                    }),
-                    new Paragraph({
-                      spacing: { after: 30 },
-                      children: [
-                        new TextRun({
-                          text: "Full-Stack Developer",
-                          size: 26,
-                          color: PRIMARY,
-                          font: "Calibri",
-                        }),
-                      ],
-                    }),
-                  ],
-                }),
-              ],
+        new Paragraph({
+          spacing: { after: 10 },
+          children: [
+            new TextRun({
+              text: "MATIAS FERNANDEZ",
+              bold: true,
+              size: 50,
+              color: DARK,
+              font: "Calibri",
+            }),
+          ],
+        }),
+        new Paragraph({
+          spacing: { after: 50 },
+          children: [
+            new TextRun({
+              text: "Full-Stack Developer",
+              size: 26,
+              color: PRIMARY,
+              font: "Calibri",
             }),
           ],
         }),
@@ -782,6 +767,7 @@ const doc = new Document({
           columnWidths: [6200, 3800],
           rows: [
             new TableRow({
+              cantSplit: false,
               children: [
                 new TableCell({
                   borders: noBorders,
